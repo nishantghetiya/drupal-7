@@ -1,0 +1,6 @@
+name = Movie API
+description = Fetch Movie Details from Title.
+package = custom
+core = 7.x
+
+scripts[] = js/movie_api.js

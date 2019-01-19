@@ -1,0 +1,33 @@
+<?php
+
+
+/*
+ * Add Button for Fetch movie details
+*/
+function movie_api_form_alter(&$form, &$form_state, $form_id) {
+  if($form_id == 'movie_node_form') {
+     $form['movie_details'] = array(
+      '#type' => 'button',
+      '#value' => t('Get Details'),
+      '#weight' => -3,
+    );
+  }
+}
+
+function movie_api_node_validate($node, $form, &$form_state) {
+
+  if($node->type == 'movie') {
+    $title = $form_state['values']['title'];
+    $relesed = $form_state['values']['field_released'][LANGUAGE_NONE][0]['value'];
+    $query = new EntityFieldQuery();
+    $result = $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'movie')
+    ->propertyCondition('title',$title ,'=')
+    ->fieldCondition('field_released', 'value', $relesed,'=')
+    ->execute();
+    $nids = array_keys($result['node']);
+    if(isset($nids) && !empty($nids)) {
+       form_set_error('title', t('Movie already Exist.'));
+    }
+  }
+}
